@@ -17,13 +17,14 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import web.model.User;
+
 import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
 @PropertySource("classpath:db.properties")
 @EnableTransactionManagement
-@ComponentScan(value = "java")
+@ComponentScan(value = "web")
 public class AppConfig {
     @Autowired
     private Environment env;
@@ -40,16 +41,25 @@ public class AppConfig {
 
     @Bean
     public LocalContainerEntityManagerFactoryBean getEntityManagerFactory() {
-        LocalContainerEntityManagerFactoryBean em
+        LocalContainerEntityManagerFactoryBean entityManager
                 = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(getDataSource());
-        em.setPackagesToScan("web.model");
-        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        em.setJpaVendorAdapter(vendorAdapter);
-        em.setJpaProperties(additionalProperties());
+        entityManager.setDataSource(getDataSource());
+        entityManager.setPackagesToScan(env.getRequiredProperty("db.entity.package"));
+        entityManager.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        entityManager.setJpaProperties(getHibernateProperties());
 
-        return em;
+        return entityManager;
     }
+
+    @Bean
+    public Properties getHibernateProperties() {
+        Properties properties = new Properties();
+        properties.put("hibernate.show_sql", env.getRequiredProperty("hibernate.show_sql"));
+        properties.put("hibernate.hbm2ddl.auto", env.getRequiredProperty("hibernate.hbm2ddl.auto"));
+
+        return properties;
+    }
+
     @Bean
     public JpaTransactionManager getTransactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
@@ -59,17 +69,9 @@ public class AppConfig {
     }
 
     @Bean
-    public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
 
-    @Bean
-    public Properties additionalProperties() {
-        Properties properties = new Properties();
-//        properties.setProperty("hibernate.hbm2ddl.auto", "update");
-        properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
 
-        return properties;
-    }
 }

@@ -8,24 +8,25 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long id;
+    private int id;
     @Column(name = "name")
     private String name;
-    @Column(name = "sureName")
+    @Column(name = "surname")
     private String sureName;
+
     public User() {
     }
-    public User(long id, String name, String sureName) {
-        this.id = id;
+
+    public User(String name, String sureName) {
         this.name = name;
         this.sureName = sureName;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -43,5 +44,13 @@ public class User {
 
     public void setSureName(String sureName) {
         this.sureName = sureName;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", sureName='" + sureName + '\'' +
+                '}';
     }
 }

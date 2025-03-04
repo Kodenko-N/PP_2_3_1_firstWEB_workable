@@ -1,17 +1,13 @@
 package web.dao;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import web.model.User;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Repository
 public class UserDaoImp implements UserDao {
@@ -20,6 +16,23 @@ public class UserDaoImp implements UserDao {
 
     @Override
     public List<User> getAllUsers() {
+        System.out.println("getAllUsers method called");
         return entityManager.createQuery("select u from User u", User.class).getResultList();
+    }
+
+    public User getUserById(int id) {
+        return entityManager.find(User.class, id);
+    }
+
+    public void save(User user) {
+        entityManager.persist(user);
+    }
+
+    public void update(User user) {
+        entityManager.merge(user);
+    }
+
+    public void delete(int id) {
+        entityManager.remove(entityManager.find(User.class, id));
     }
 }
