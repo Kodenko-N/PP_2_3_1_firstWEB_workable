@@ -12,7 +12,6 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import web.model.User;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -52,7 +51,9 @@ public class AppConfig {
         Properties properties = new Properties();
         properties.put("hibernate.show_sql", env.getRequiredProperty("hibernate.show_sql"));
         properties.put("hibernate.hbm2ddl.auto", env.getRequiredProperty("hibernate.hbm2ddl.auto"));
-
+        properties.put("hibernate.connection.characterEncoding", "utf8");
+        properties.put("hibernate.connection.CharSet", "utf8");
+        properties.put("hibernate.connection.useUnicode", true);
         return properties;
     }
 
