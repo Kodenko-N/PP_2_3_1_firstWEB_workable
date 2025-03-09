@@ -1,13 +1,11 @@
 package web.dao;
 
-import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import web.model.User;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-import java.util.logging.Logger;
+
 
 @Repository
 public class UserDaoImp implements UserDao {
